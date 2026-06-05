@@ -2,7 +2,7 @@
 Version=1.0
 Type=Application
 Encoding=UTF-8
-Name=FFmpeg: WhatsApp (documento)
+Name=FFmpeg: Vídeo WhatsApp (documento)
 Comment=Prepara vídeo MP4 compatible para enviar como documento en WhatsApp (hasta 2 GB)
 Exec=@INSTALL_LIB@ %F
 Icon-Name=video-x-generic

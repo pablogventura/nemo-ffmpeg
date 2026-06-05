@@ -61,6 +61,37 @@ nemo_ffmpeg_media_duration_seconds() {
   ffprobe -v error -show_entries format=duration -of csv=p=0 "$path" 2>/dev/null
 }
 
+nemo_ffmpeg_calc_audio_bitrate_kbps() {
+  local target_bytes=$1
+  local duration=$2
+  local margin_pct=${3:-5}
+
+  if [[ -z "$duration" || "$duration" == "N/A" ]]; then
+    echo 0
+    return 1
+  fi
+
+  awk -v target="$target_bytes" -v dur="$duration" -v margin="$margin_pct" '
+    BEGIN {
+      if (dur <= 0) { print 0; exit 1 }
+      kbps = int((target * 8) / 1000 / dur * (100 - margin) / 100)
+      if (kbps < 64) kbps = 64
+      if (kbps > 320) kbps = 320
+      print kbps
+    }'
+}
+
+nemo_ffmpeg_is_mp3_file() {
+  local path=$1
+  local ext codec
+
+  ext=${path##*.}
+  ext=$(printf '%s' "$ext" | tr '[:upper:]' '[:lower:]')
+  [[ "$ext" == "mp3" ]] || return 1
+  codec=$(nemo_ffmpeg_audio_codec "$path")
+  [[ "$codec" == "mp3" ]]
+}
+
 nemo_ffmpeg_calc_video_bitrate_kbps() {
   local target_bytes=$1
   local duration=$2

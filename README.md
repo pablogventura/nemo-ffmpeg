@@ -1,27 +1,32 @@
 # nemo-ffmpeg
 
-Acciones de menú contextual para [Nemo](https://github.com/linuxmint/nemo) que usan **ffmpeg** para convertir audio y preparar vídeos para WhatsApp.
+Acciones de menú contextual para [Nemo](https://github.com/linuxmint/nemo) que usan **ffmpeg** para convertir audio y preparar archivos para WhatsApp.
 
 ![test](https://github.com/pablogventura/nemo-ffmpeg/actions/workflows/test.yml/badge.svg)
 
 ## Acciones
 
-| Menú en Nemo | Qué hace | Archivo generado |
-|--------------|----------|------------------|
-| **FFmpeg: Convertir a MP3** | Convierte audio o extrae el audio de un vídeo | `nombre.mp3` (misma carpeta) |
-| **FFmpeg: WhatsApp (chat)** | MP4 ≤ 16 MB, H.264 + AAC, ~720p, preview en el chat | `nombre-whatsapp.mp4` |
-| **FFmpeg: WhatsApp (documento)** | MP4 compatible, alta calidad, hasta 2 GB como documento | `nombre-whatsapp-doc.mp4` |
+| Menú en Nemo | Entrada | Archivo generado |
+|--------------|---------|------------------|
+| **FFmpeg: Convertir a MP3** | audio + vídeo | `nombre.mp3` |
+| **FFmpeg: Audio WhatsApp (chat)** | solo audio | `nombre-whatsapp.mp3` (≤ 16 MB) |
+| **FFmpeg: Audio WhatsApp (documento)** | solo audio | `nombre-whatsapp-doc.mp3` (≤ 2 GB) |
+| **FFmpeg: Vídeo WhatsApp (chat)** | solo vídeo | `nombre-whatsapp.mp4` (≤ 16 MB) |
+| **FFmpeg: Vídeo WhatsApp (documento)** | solo vídeo | `nombre-whatsapp-doc.mp4` (≤ 2 GB) |
 
-Las acciones de vídeo solo aparecen al hacer clic derecho sobre archivos de vídeo. La de MP3 aparece en audio y en vídeos (para extraer la pista de audio).
+Un mismo `.flac` puede generar hasta tres MP3 distintos sin pisarse: `cancion.mp3`, `cancion-whatsapp.mp3` y `cancion-whatsapp-doc.mp3`.
+
+Las acciones **Audio WhatsApp** solo aparecen en archivos de audio. Las **Vídeo WhatsApp** solo en vídeos. **Convertir a MP3** también extrae audio de un vídeo.
 
 Si el archivo de salida **ya existe**, se omite (no se sobrescribe). Para forzar sobrescritura desde terminal:
 
 ```bash
 MENU_FFMPEG_FORCE=1 ~/.local/share/nemo-ffmpeg/lib/convert-to-mp3.sh archivo.flac
+MENU_FFMPEG_FORCE=1 ~/.local/share/nemo-ffmpeg/lib/audio-whatsapp-chat.sh musica.flac
 MENU_FFMPEG_FORCE=1 ~/.local/share/nemo-ffmpeg/lib/video-whatsapp-chat.sh clip.mp4
 ```
 
-El modo **chat** requiere que el vídeo tenga pista de audio.
+El modo **chat** (audio y vídeo) calcula el bitrate para caber en 16 MB. En audio, si no cabe en estéreo, reintenta en **mono** antes de fallar. El modo **vídeo chat** requiere pista de audio.
 
 ## Requisitos
 
@@ -49,7 +54,7 @@ Instalación rápida en una línea:
 git clone https://github.com/pablogventura/nemo-ffmpeg.git /tmp/nemo-ffmpeg && /tmp/nemo-ffmpeg/install.sh
 ```
 
-El instalador copia los scripts a `~/.local/share/nemo-ffmpeg/` y registra tres acciones en `~/.local/share/nemo/actions/`.
+El instalador copia los scripts a `~/.local/share/nemo-ffmpeg/` y registra **cinco** acciones en `~/.local/share/nemo/actions/`.
 
 Si no ves las acciones nuevas, reinicia Nemo:
 
@@ -68,6 +73,8 @@ También puedes ejecutar los scripts directamente:
 
 ```bash
 ~/.local/share/nemo-ffmpeg/lib/convert-to-mp3.sh musica.flac
+~/.local/share/nemo-ffmpeg/lib/audio-whatsapp-chat.sh musica.flac
+~/.local/share/nemo-ffmpeg/lib/audio-whatsapp-document.sh musica.flac
 ~/.local/share/nemo-ffmpeg/lib/video-whatsapp-chat.sh clip.mp4
 ~/.local/share/nemo-ffmpeg/lib/video-whatsapp-document.sh clip.mkv
 ```
@@ -100,7 +107,7 @@ Genera fixtures temporales en `tests/tmp/` y ejecuta pruebas de los scripts y de
 | **Chat (multimedia)** | ≤ 16 MB | Se reproduce en el chat con miniatura |
 | **Documento** | ≤ 2 GB | Mayor calidad; el destinatario descarga para ver |
 
-El modo chat calcula el bitrate según la duración del vídeo. Si no cabe en 16 MB incluso tras un reintento con menor calidad, verás un error en la terminal (prueba el modo documento o recorta el vídeo).
+Si no cabe en 16 MB tras los reintentos (menor bitrate, mono en audio), verás un error en la terminal. Prueba el modo documento o recorta el archivo.
 
 ## Licencia
 

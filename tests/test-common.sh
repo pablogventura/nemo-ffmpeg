@@ -12,6 +12,10 @@ FIXTURES="${SCRIPT_DIR}/tmp"
 
 printf '== test-common ==\n'
 
+audio_bitrate=$(nemo_ffmpeg_calc_audio_bitrate_kbps $((16 * 1024 * 1024)) 60 5)
+assert_gt "$audio_bitrate" 64 "audio bitrate 60s"
+assert_equals "320" "$(nemo_ffmpeg_calc_audio_bitrate_kbps $((16 * 1024 * 1024)) 1 5)" "audio bitrate capped 320"
+
 bitrate=$(nemo_ffmpeg_calc_video_bitrate_kbps $((16 * 1024 * 1024)) 60 128 5)
 assert_gt "$bitrate" 100 "bitrate 60s"
 

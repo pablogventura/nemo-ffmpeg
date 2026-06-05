@@ -15,6 +15,8 @@ failed=0
 for test_script in \
   "${SCRIPT_DIR}/test-common.sh" \
   "${SCRIPT_DIR}/test-convert-mp3.sh" \
+  "${SCRIPT_DIR}/test-audio-whatsapp-chat.sh" \
+  "${SCRIPT_DIR}/test-audio-whatsapp-document.sh" \
   "${SCRIPT_DIR}/test-whatsapp-chat.sh" \
   "${SCRIPT_DIR}/test-whatsapp-chat-errors.sh" \
   "${SCRIPT_DIR}/test-whatsapp-document.sh" \

@@ -2,7 +2,7 @@
 Version=1.0
 Type=Application
 Encoding=UTF-8
-Name=FFmpeg: WhatsApp (chat)
+Name=FFmpeg: Vídeo WhatsApp (chat)
 Comment=Prepara vídeo MP4 de hasta 16 MB para enviar como multimedia en WhatsApp
 Exec=@INSTALL_LIB@ %F
 Icon-Name=video-x-generic

@@ -10,6 +10,8 @@ VERSION_FILE="${SCRIPT_DIR}/VERSION"
 
 ACTIONS=(
   "ffmpeg-convert-mp3.nemo_action:convert-to-mp3.sh"
+  "ffmpeg-audio-whatsapp-chat.nemo_action:audio-whatsapp-chat.sh"
+  "ffmpeg-audio-whatsapp-document.nemo_action:audio-whatsapp-document.sh"
   "ffmpeg-whatsapp-chat.nemo_action:video-whatsapp-chat.sh"
   "ffmpeg-whatsapp-document.nemo_action:video-whatsapp-document.sh"
 )
@@ -95,6 +97,8 @@ do_install() {
 
   install -m 755 "${SCRIPT_DIR}/lib/common.sh" "${APP_DIR}/lib/common.sh"
   install -m 755 "${SCRIPT_DIR}/lib/convert-to-mp3.sh" "${APP_DIR}/lib/convert-to-mp3.sh"
+  install -m 755 "${SCRIPT_DIR}/lib/audio-whatsapp-chat.sh" "${APP_DIR}/lib/audio-whatsapp-chat.sh"
+  install -m 755 "${SCRIPT_DIR}/lib/audio-whatsapp-document.sh" "${APP_DIR}/lib/audio-whatsapp-document.sh"
   install -m 755 "${SCRIPT_DIR}/lib/video-whatsapp-chat.sh" "${APP_DIR}/lib/video-whatsapp-chat.sh"
   install -m 755 "${SCRIPT_DIR}/lib/video-whatsapp-document.sh" "${APP_DIR}/lib/video-whatsapp-document.sh"
   install -m 644 "$VERSION_FILE" "${APP_DIR}/VERSION"
