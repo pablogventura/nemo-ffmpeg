@@ -44,8 +44,11 @@ for input in "$@"; do
   fi
 
   nemo_ffmpeg_log "convirtiendo: ${input} -> ${output}"
-  if ffmpeg -hide_banner -loglevel error -nostdin -i "$input" -vn \
-    -codec:a libmp3lame -qscale:a 2 "$output"; then
+  ffmpeg_args=(-hide_banner -loglevel error -nostdin -i "$input" -vn -codec:a libmp3lame -qscale:a 2)
+  if [[ "${MENU_FFMPEG_FORCE:-}" == "1" ]]; then
+    ffmpeg_args+=(-y)
+  fi
+  if ffmpeg "${ffmpeg_args[@]}" "$output"; then
     ((MENU_FFMPEG_OK++)) || true
   else
     nemo_ffmpeg_log "error al convertir: ${input}"

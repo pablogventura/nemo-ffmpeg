@@ -14,11 +14,14 @@ Acciones de menú contextual para [Nemo](https://github.com/linuxmint/nemo) que 
 
 Las acciones de vídeo solo aparecen al hacer clic derecho sobre archivos de vídeo. La de MP3 aparece en audio y en vídeos (para extraer la pista de audio).
 
-Si el archivo de salida **ya existe**, se omite (no se sobrescribe). Para forzar sobrescritura en terminal:
+Si el archivo de salida **ya existe**, se omite (no se sobrescribe). Para forzar sobrescritura desde terminal:
 
 ```bash
 MENU_FFMPEG_FORCE=1 ~/.local/share/nemo-ffmpeg/lib/convert-to-mp3.sh archivo.flac
+MENU_FFMPEG_FORCE=1 ~/.local/share/nemo-ffmpeg/lib/video-whatsapp-chat.sh clip.mp4
 ```
+
+El modo **chat** requiere que el vídeo tenga pista de audio.
 
 ## Requisitos
 

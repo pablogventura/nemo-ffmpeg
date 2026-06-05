@@ -22,14 +22,19 @@ nemo_ffmpeg_encode_chat() {
   local output=$2
   local video_kbps=$3
 
-  ffmpeg -hide_banner -loglevel error -nostdin -i "$input" \
-    -vf "$(nemo_ffmpeg_scale_filter_720)" \
-    -c:v libx264 -profile:v main -level 3.1 \
-    -b:v "${video_kbps}k" -maxrate "$((video_kbps * 12 / 10))k" \
-    -bufsize "$((video_kbps * 2))k" \
-    -c:a aac -b:a "${WHATSAPP_CHAT_AUDIO_KBPS}k" -ac 2 \
-    -movflags +faststart \
-    "$output"
+  local -a ffmpeg_args=(
+    -hide_banner -loglevel error -nostdin -i "$input"
+    -vf "$(nemo_ffmpeg_scale_filter_720)"
+    -c:v libx264 -profile:v main -level 3.1
+    -b:v "${video_kbps}k" -maxrate "$((video_kbps * 12 / 10))k"
+    -bufsize "$((video_kbps * 2))k"
+    -c:a aac -b:a "${WHATSAPP_CHAT_AUDIO_KBPS}k" -ac 2
+    -movflags +faststart
+  )
+  if [[ "${MENU_FFMPEG_FORCE:-}" == "1" ]]; then
+    ffmpeg_args+=(-y)
+  fi
+  ffmpeg "${ffmpeg_args[@]}" "$output"
 }
 
 for input in "$@"; do
@@ -49,6 +54,12 @@ for input in "$@"; do
 
   if ! nemo_ffmpeg_has_video_stream "$input"; then
     nemo_ffmpeg_log "sin pista de vídeo: ${input}"
+    ((MENU_FFMPEG_FAILED++)) || true
+    continue
+  fi
+
+  if ! nemo_ffmpeg_has_audio_stream "$input"; then
+    nemo_ffmpeg_log "sin pista de audio: ${input}"
     ((MENU_FFMPEG_FAILED++)) || true
     continue
   fi

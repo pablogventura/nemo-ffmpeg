@@ -17,3 +17,9 @@ jobs:
 
       - name: Ejecutar tests
         run: ./test.sh
+
+      - name: ShellCheck (no bloqueante)
+        continue-on-error: true
+        run: |
+          sudo apt-get install -y shellcheck
+          shellcheck install.sh test.sh lib/*.sh tests/*.sh

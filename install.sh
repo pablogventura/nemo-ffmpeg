@@ -116,18 +116,6 @@ do_install() {
 }
 
 do_uninstall() {
-  if [[ -f "$MANIFEST" ]]; then
-    python3 - <<'PY' "$MANIFEST" 2>/dev/null || true
-import json, os, sys
-path = sys.argv[1]
-with open(path) as f:
-    data = json.load(f)
-for item in data.get("files", []):
-    if os.path.isfile(item):
-        os.remove(item)
-PY
-  fi
-
   local entry action
   for entry in "${ACTIONS[@]}"; do
     action=${entry%%:*}

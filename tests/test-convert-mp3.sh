@@ -39,4 +39,12 @@ assert_exit_code 0 bash "$LIB" "${WORK}/already.mp3"
 
 assert_exit_code 1 bash "$LIB" "${WORK}/no-audio.mp4"
 
+cp "${WORK}/tone.wav" "${WORK}/force-me.wav"
+touch "${WORK}/force-me.mp3"
+export MENU_FFMPEG_FORCE=1
+assert_exit_code 0 bash "$LIB" "${WORK}/force-me.wav"
+force_size=$(stat -c '%s' "${WORK}/force-me.mp3")
+assert_gt "$force_size" 0 "MENU_FFMPEG_FORCE sobrescribe"
+unset MENU_FFMPEG_FORCE
+
 test_summary

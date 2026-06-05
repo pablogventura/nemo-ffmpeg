@@ -56,8 +56,11 @@ for input in "$@"; do
 
   if nemo_ffmpeg_is_h264_aac_mp4 "$input" && (( input_size <= WHATSAPP_DOC_MAX_BYTES )); then
     nemo_ffmpeg_log "modo copia (sin recodificar): ${input} -> ${output}"
-    if ffmpeg -hide_banner -loglevel error -nostdin -i "$input" \
-      -c copy -movflags +faststart "$output"; then
+    copy_args=(-hide_banner -loglevel error -nostdin -i "$input" -c copy -movflags +faststart)
+    if [[ "${MENU_FFMPEG_FORCE:-}" == "1" ]]; then
+      copy_args+=(-y)
+    fi
+    if ffmpeg "${copy_args[@]}" "$output"; then
       ((MENU_FFMPEG_OK++)) || true
     else
       nemo_ffmpeg_log "error en copia: ${input}"
@@ -68,18 +71,19 @@ for input in "$@"; do
 
   nemo_ffmpeg_log "codificando (documento): ${input} -> ${output}"
 
-  vf_filter=""
+  encode_args=(-hide_banner -loglevel error -nostdin -i "$input")
   if nemo_ffmpeg_needs_scale_down "$input"; then
-    vf_filter="-vf $(nemo_ffmpeg_scale_filter_1080)"
+    encode_args+=(-vf "$(nemo_ffmpeg_scale_filter_1080)")
   fi
-
-  # shellcheck disable=SC2086
-  if ffmpeg -hide_banner -loglevel error -nostdin -i "$input" \
-    $vf_filter \
-    -c:v libx264 -profile:v main -crf 20 \
-    -c:a aac -b:a 192k -ac 2 \
-    -movflags +faststart \
-    "$output"; then
+  encode_args+=(
+    -c:v libx264 -profile:v main -crf 20
+    -c:a aac -b:a 192k -ac 2
+    -movflags +faststart
+  )
+  if [[ "${MENU_FFMPEG_FORCE:-}" == "1" ]]; then
+    encode_args+=(-y)
+  fi
+  if ffmpeg "${encode_args[@]}" "$output"; then
     out_size=$(nemo_ffmpeg_file_size_bytes "$output")
     if (( out_size > WHATSAPP_DOC_MAX_BYTES )); then
       nemo_ffmpeg_log "resultado mayor a 2 GB: ${output}"

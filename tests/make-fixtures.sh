@@ -44,10 +44,19 @@ make_compatible_mp4() {
   cp -f "${FIXTURES_DIR}/short.mp4" "${FIXTURES_DIR}/compatible.mp4"
 }
 
+make_sample_mkv() {
+  ffmpeg -hide_banner -loglevel error -y \
+    -f lavfi -i "testsrc=size=640x360:rate=25:duration=4" \
+    -f lavfi -i "sine=frequency=520:duration=4" \
+    -c:v libx264 -profile:v main -pix_fmt yuv420p -c:a aac -b:a 128k \
+    "${FIXTURES_DIR}/sample.mkv"
+}
+
 make_wav
 make_short_mp4
 make_no_audio_mp4
 make_longish_mp4
 make_compatible_mp4
+make_sample_mkv
 
 echo "Fixtures en ${FIXTURES_DIR}"

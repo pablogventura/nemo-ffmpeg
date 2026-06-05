@@ -33,6 +33,17 @@ content=$(cat "${ACTIONS_DIR}/ffmpeg-convert-mp3.nemo_action")
 assert_contains "$content" "FFmpeg: Convertir a MP3"
 assert_contains "$content" "${APP_DIR}/lib/convert-to-mp3.sh"
 
+content=$(cat "${ACTIONS_DIR}/ffmpeg-whatsapp-chat.nemo_action")
+assert_contains "$content" "FFmpeg: WhatsApp (chat)"
+assert_contains "$content" "${APP_DIR}/lib/video-whatsapp-chat.sh"
+
+content=$(cat "${ACTIONS_DIR}/ffmpeg-whatsapp-document.nemo_action")
+assert_contains "$content" "FFmpeg: WhatsApp (documento)"
+assert_contains "$content" "${APP_DIR}/lib/video-whatsapp-document.sh"
+
+assert_exit_code 0 bash "${ROOT_DIR}/install.sh" install
+assert_file_exists "${APP_DIR}/installed.json"
+
 assert_exit_code 0 bash "${ROOT_DIR}/install.sh" status
 
 assert_exit_code 0 bash "${ROOT_DIR}/install.sh" uninstall
