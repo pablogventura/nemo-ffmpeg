@@ -1,0 +1,13 @@
+[Nemo Action]
+Version=1.0
+Type=Application
+Encoding=UTF-8
+Name=FFmpeg: WhatsApp (documento)
+Comment=Prepara vídeo MP4 compatible para enviar como documento en WhatsApp (hasta 2 GB)
+Exec=@INSTALL_LIB@ %F
+Icon-Name=video-x-generic
+Selection=any
+Mimetypes=video/mp4;video/x-matroska;video/quicktime;video/webm;video/x-msvideo;video/x-ms-wmv;video/3gpp;video/ogg;video/x-flv;video/x-ms-asf;
+Dependencies=ffmpeg;
+Terminal=true
+Quote=double
